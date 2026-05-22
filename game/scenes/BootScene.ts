@@ -38,6 +38,9 @@ export default class BootScene extends Phaser.Scene {
     if (!this.textures.exists('circle_img_1')) this.load.image('circle_img_1', '/lingkaran/Gemini_Generated_Image_7x3ltg7x3ltg7x3l.png');
     if (!this.textures.exists('square_img_1')) this.load.image('square_img_1', '/persegi/ChatGPT Image May 11, 2026, 07_57_59 PM.png');
     if (!this.textures.exists('triangle_img_1')) this.load.image('triangle_img_1', '/segitiga/Gemini_Generated_Image_2o67qu2o67qu2o67.png');
+    if (!this.textures.exists('rectangle_img_1')) this.load.image('rectangle_img_1', '/pesergi panjang/pesergi panjang1.png');
+    if (!this.textures.exists('rectangle_img_2')) this.load.image('rectangle_img_2', '/pesergi panjang/pesergi panjang2.png');
+    if (!this.textures.exists('rectangle_img_3')) this.load.image('rectangle_img_3', '/pesergi panjang/pesergi panjang3.png');
 
     // Load Time assets
     const timeStages = ['siang', 'sore', 'malam'];

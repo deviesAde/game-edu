@@ -32,7 +32,7 @@ export const generateQuestion = (theme: ThemeId, level: LevelId, questionIndex: 
 
      if (selectedType === 'besar-kecil') {
         const isLarger = Math.random() > 0.5;
-        questionText = isLarger ? "Mana yang lebih BESAR? 🐘" : "Mana yang lebih KECIL? 🐜";
+        questionText = isLarger ? "Mana yang lebih BESAR?" : "Mana yang lebih KECIL?";
         options = [
           { id: 'opt1', value: 50, label: 'Besar' },
           { id: 'opt2', value: 150, label: 'Kecil' }
@@ -40,7 +40,7 @@ export const generateQuestion = (theme: ThemeId, level: LevelId, questionIndex: 
         correctAnswerId = isLarger ? 'opt1' : 'opt2';
      } else if (selectedType === 'panjang-pendek') {
         const isLonger = Math.random() > 0.5;
-        questionText = isLonger ? "Mana yang lebih PANJANG? 🐍" : "Mana yang lebih PENDEK? 🐛";
+        questionText = isLonger ? "Mana yang lebih PANJANG?" : "Mana yang lebih PENDEK?";
         options = [
           { id: 'opt1', value: 80, label: 'Panjang' },
           { id: 'opt2', value: 200, label: 'Pendek' }
@@ -48,7 +48,7 @@ export const generateQuestion = (theme: ThemeId, level: LevelId, questionIndex: 
         correctAnswerId = isLonger ? 'opt1' : 'opt2';
      } else if (selectedType === 'tinggi-rendah') {
         const isHigher = Math.random() > 0.5;
-        questionText = isHigher ? "Mana yang lebih TINGGI? 🦒" : "Mana yang lebih RENDAH? 🐥";
+        questionText = isHigher ? "Mana yang lebih TINGGI?" : "Mana yang lebih RENDAH?";
         options = [
           { id: 'opt1', value: 60, label: 'Tinggi' },
           { id: 'opt2', value: 180, label: 'Rendah' }
@@ -56,7 +56,7 @@ export const generateQuestion = (theme: ThemeId, level: LevelId, questionIndex: 
         correctAnswerId = isHigher ? 'opt1' : 'opt2';
      } else if (selectedType === 'berat-ringan') {
         const isHeavier = Math.random() > 0.5;
-        questionText = isHeavier ? "Mana yang lebih BERAT? 🪨" : "Mana yang lebih RINGAN? 🎈";
+        questionText = isHeavier ? "Mana yang lebih BERAT?" : "Mana yang lebih RINGAN?";
         options = [
           { id: 'opt1', value: 10, label: 'Berat' },
           { id: 'opt2', value: 100, label: 'Ringan' }
@@ -64,7 +64,7 @@ export const generateQuestion = (theme: ThemeId, level: LevelId, questionIndex: 
         correctAnswerId = isHeavier ? 'opt1' : 'opt2';
      } else if (selectedType === 'kosong-penuh') {
         const isFull = Math.random() > 0.5;
-        questionText = isFull ? "Pilih gelas yang PENUH! 🥛" : "Pilih gelas yang KOSONG! 🥛";
+        questionText = isFull ? "Pilih gelas yang PENUH!" : "Pilih gelas yang KOSONG!";
         options = [
           { id: 'opt1', value: 0, label: 'Penuh' },
           { id: 'opt2', value: 100, label: 'Kosong' }
@@ -72,7 +72,7 @@ export const generateQuestion = (theme: ThemeId, level: LevelId, questionIndex: 
         correctAnswerId = isFull ? 'opt1' : 'opt2';
      } else if (selectedType === 'banyak-sedikti') {
         const isMore = Math.random() > 0.5;
-        questionText = isMore ? "Mana yang lebih BANYAK? 🍎" : "Mana yang lebih SEDIKIT? 🍎";
+        questionText = isMore ? "Mana yang lebih BANYAK?" : "Mana yang lebih SEDIKIT?";
         options = [
           { id: 'opt1', value: 10, label: 'Banyak' },
           { id: 'opt2', value: 100, label: 'Sedikit' }
@@ -80,7 +80,7 @@ export const generateQuestion = (theme: ThemeId, level: LevelId, questionIndex: 
         correctAnswerId = isMore ? 'opt1' : 'opt2';
      } else if (selectedType === 'jauh-dekat') {
         const isFar = Math.random() > 0.5;
-        questionText = isFar ? "Mana yang lebih JAUH? ⛰️" : "Mana yang lebih DEKAT? 🏠";
+        questionText = isFar ? "Mana yang lebih JAUH?" : "Mana yang lebih DEKAT?";
         options = [
           { id: 'opt1', value: 10, label: 'Jauh' },
           { id: 'opt2', value: 100, label: 'Dekat' }
@@ -88,7 +88,7 @@ export const generateQuestion = (theme: ThemeId, level: LevelId, questionIndex: 
         correctAnswerId = isFar ? 'opt1' : 'opt2';
      } else if (selectedType === 'cepat-lambat') {
         const isFast = Math.random() > 0.5;
-        questionText = isFast ? "Mana yang lebih CEPAT? 🐎" : "Mana yang lebih LAMBAT? 🐢";
+        questionText = isFast ? "Mana yang lebih CEPAT?" : "Mana yang lebih LAMBAT?";
         options = [
           { id: 'opt1', value: 10, label: 'Cepat' },
           { id: 'opt2', value: 100, label: 'Lambat' }
@@ -96,7 +96,7 @@ export const generateQuestion = (theme: ThemeId, level: LevelId, questionIndex: 
         correctAnswerId = isFast ? 'opt1' : 'opt2';
      } else if (selectedType === 'luas-sempit') {
         const isWide = Math.random() > 0.5;
-        questionText = isWide ? "Mana yang lebih LUAS? 🛣️" : "Mana yang lebih SEMPIT? 🏘️";
+        questionText = isWide ? "Mana yang lebih LUAS?" : "Mana yang lebih SEMPIT?";
         options = [
           { id: 'opt1', value: 10, label: 'Luas' },
           { id: 'opt2', value: 100, label: 'Sempit' }
@@ -104,7 +104,7 @@ export const generateQuestion = (theme: ThemeId, level: LevelId, questionIndex: 
         correctAnswerId = isWide ? 'opt1' : 'opt2';
      } else if (selectedType === 'tebal-tipis') {
         const isThick = Math.random() > 0.5;
-        questionText = isThick ? "Mana yang lebih TEBAL? 📚" : "Mana yang lebih TIPIS? 📄";
+        questionText = isThick ? "Mana yang lebih TEBAL?" : "Mana yang lebih TIPIS?";
         options = [
           { id: 'opt1', value: 10, label: 'Tebal' },
           { id: 'opt2', value: 100, label: 'Tipis' }
@@ -126,10 +126,10 @@ export const generateQuestion = (theme: ThemeId, level: LevelId, questionIndex: 
     const selectedShapes = allShapes.sort(() => Math.random() - 0.5).slice(0, numOptions);
     const targetShape = selectedShapes[Math.floor(Math.random() * selectedShapes.length)];
     const shapeNames: Record<string, string> = {
-      'circle': 'BULAT LINGKARAN 🔵',
-      'triangle': 'SEGITIGA LANCIP 🔺',
-      'square': 'KOTAK PERSEGI 🟦',
-      'rectangle': 'PERSEGI PANJANG 🚪'
+      'circle': 'BULAT LINGKARAN',
+      'triangle': 'SEGITIGA LANCIP',
+      'square': 'KOTAK PERSEGI',
+      'rectangle': 'PERSEGI PANJANG'
     };
     return {
       id, theme, level,

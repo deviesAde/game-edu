@@ -46,15 +46,15 @@ export default class MainScene extends Phaser.Scene {
     this.currentQuestion = nextQ;
 
     // --- QUESTION BOARD ---
-    const boardContainer = this.add.container(centerX, 180).setScale(0);
+    const boardContainer = this.add.container(centerX, 220).setScale(0);
     const boardGraphics = this.add.graphics();
-    boardGraphics.fillStyle(0xffffff, 0.9).fillRoundedRect(-400, -60, 800, 120, 40);
-    boardGraphics.lineStyle(6, 0x0ea5e9, 1).strokeRoundedRect(-400, -60, 800, 120, 40);
-    boardGraphics.fillStyle(0x0ea5e9, 1).fillCircle(-400, 0, 50).fillCircle(400, 0, 50);
+    // Compact, square-ish rounded rectangle (width 720, height 140, corner radius 28)
+    boardGraphics.fillStyle(0x0ea5e9, 0.95).fillRoundedRect(-360, -70, 720, 140, 28);
+    boardGraphics.lineStyle(6, 0xffffff, 1).strokeRoundedRect(-360, -70, 720, 140, 28);
     boardContainer.add(boardGraphics);
     
     const qText = this.add.text(0, 0, this.currentQuestion.questionText, {
-      fontFamily: 'Fredoka', fontSize: '38px', color: '#0369a1', align: 'center', wordWrap: { width: 680 }, fontStyle: 'bold'
+      fontFamily: 'Fredoka', fontSize: '48px', color: '#ffffff', align: 'center', wordWrap: { width: 660 }, fontStyle: 'bold'
     }).setOrigin(0.5);
     boardContainer.add(qText);
     this.tweens.add({ targets: boardContainer, scale: 1, duration: 600, ease: 'Back.easeOut' });
@@ -88,6 +88,61 @@ export default class MainScene extends Phaser.Scene {
     this.add.ellipse(centerX, height + 100, width * 2, 400, 0x86efac, 0.7).setDepth(-10);
     this.add.ellipse(centerX - 300, height + 50, width * 1.5, 350, 0x4ade80, 0.8).setDepth(-9);
     this.add.ellipse(centerX + 300, height + 80, width * 1.5, 400, 0x22c55e, 0.9).setDepth(-8);
+    this.spawnFlowers();
+  }
+
+  spawnFlowers() {
+    const width = this.cameras.main.width;
+    const height = this.cameras.main.height;
+    const flowers = ['🌸', '🌺', '🌼', '🌻', '🌷', '🌸', '🌺', '🌼'];
+    const count = 14;
+
+    for (let i = 0; i < count; i++) {
+      const emoji = flowers[i % flowers.length];
+      const x = Phaser.Math.Between(30, width - 30);
+      const y = Phaser.Math.Between(60, height - 60);
+      const size = Phaser.Math.Between(22, 38);
+      const delay = Phaser.Math.Between(0, 3000);
+      const duration = Phaser.Math.Between(2500, 4500);
+
+      const flower = this.add.text(x, y, emoji, {
+        fontSize: `${size}px`,
+        padding: { top: 8, bottom: 8, left: 8, right: 8 }
+      }).setOrigin(0.5).setDepth(-5).setAlpha(0.75);
+
+      // Gentle float up-down
+      this.tweens.add({
+        targets: flower,
+        y: y - Phaser.Math.Between(18, 35),
+        duration,
+        delay,
+        ease: 'Sine.easeInOut',
+        yoyo: true,
+        repeat: -1
+      });
+
+      // Gentle rotation sway
+      this.tweens.add({
+        targets: flower,
+        angle: Phaser.Math.Between(-18, 18),
+        duration: duration * 1.3,
+        delay: delay + 200,
+        ease: 'Sine.easeInOut',
+        yoyo: true,
+        repeat: -1
+      });
+
+      // Subtle scale pulse
+      this.tweens.add({
+        targets: flower,
+        scale: 1.25,
+        duration: duration * 0.9,
+        delay: delay + 100,
+        ease: 'Sine.easeInOut',
+        yoyo: true,
+        repeat: -1
+      });
+    }
   }
 
   renderOptions() {
@@ -96,58 +151,118 @@ export default class MainScene extends Phaser.Scene {
     const spacing = count === 2 ? 450 : 350;
     const startX = centerX - ((count - 1) * spacing / 2);
     
+    // Playful kid-friendly candy color schemes matching the main UI!
+    const cardColors = [
+      { fill: 0x0ea5e9, stroke: 0xffffff, shadow: 0x0284c7 }, // Sky blue
+      { fill: 0xf43f5e, stroke: 0xffffff, shadow: 0xbe123c }, // Rose pink
+      { fill: 0xf97316, stroke: 0xffffff, shadow: 0xc2410c }, // Orange
+      { fill: 0xa855f7, stroke: 0xffffff, shadow: 0x7e22ce }  // Purple
+    ];
+    
     this.currentQuestion.options.forEach((opt, index) => {
+      const colorScheme = cardColors[index % cardColors.length];
       const container = this.add.container(startX + (index * spacing), centerY + 100).setScale(0);
-      const frame = this.add.rectangle(0, 0, 240, 240, 0xffffff, 1).setStrokeStyle(12, 0x0284c7);
-      const bg = this.add.rectangle(0, 0, 240, 240, 0xffffff, 0.01).setInteractive({ useHandCursor: true });
-      const halo = this.add.circle(0, 0, 140, 0xffffff, 0).setStrokeStyle(6, 0x0284c7, 0);
-      container.add([frame, halo, bg]);
+      
+      // 3D shadowed card drawn via Graphics
+      const cardGraphics = this.add.graphics();
+      
+      // 1. Draw Y-shifted bottom 3D shadow (16px offset, rounded corners)
+      cardGraphics.fillStyle(colorScheme.shadow, 1);
+      cardGraphics.fillRoundedRect(-120, -120 + 16, 240, 240, 40);
+      
+      // 2. Draw front candy-colored card fill
+      cardGraphics.fillStyle(colorScheme.fill, 1);
+      cardGraphics.fillRoundedRect(-120, -120, 240, 240, 40);
+      
+      // 3. Draw thick white outline border
+      cardGraphics.lineStyle(10, colorScheme.stroke, 1);
+      cardGraphics.strokeRoundedRect(-120, -120, 240, 240, 40);
+      
+      // 4. Glow halo on hover (slightly larger rounded rectangle)
+      const halo = this.add.graphics();
+      halo.lineStyle(8, colorScheme.fill, 0.5);
+      halo.strokeRoundedRect(-135, -135, 270, 270, 46);
+      halo.setAlpha(0);
+      
+      // 5. Interactive hit area overlay (with Y offset matching card base)
+      const bg = this.add.rectangle(0, 7, 240, 240, 0xffffff, 0.01).setInteractive({ useHandCursor: true });
+      
+      container.add([cardGraphics, halo, bg]);
 
       if (this.currentQuestion.theme === 'size') {
+        const innerPlate = this.add.graphics();
+        innerPlate.fillStyle(0xffffff, 0.95).fillRoundedRect(-95, -95, 190, 190, 25);
+        container.add(innerPlate);
+
         const concept = this.currentQuestion.metadata?.concept;
         const isPos = opt.id === 'opt1' || ['Besar','Panjang','Tinggi','Berat','Tebal','Banyak','Jauh','Penuh','Cepat','Luas'].includes(opt.label);
         const imgKey = isPos ? `${concept}_1` : `${concept}_2`;
         if (this.textures.exists(imgKey)) {
           const img = this.add.image(0, 0, imgKey);
-          img.setScale(Math.min(220 / img.width, 220 / img.height));
-          const maskGfx = this.make.graphics({ x: container.x, y: container.y }).fillStyle(0xffffff).fillRoundedRect(-110, -110, 220, 220, 30);
+          img.setScale(Math.min(170 / img.width, 170 / img.height));
+          const maskGfx = this.make.graphics({ x: container.x, y: container.y }).fillStyle(0xffffff).fillRoundedRect(-85, -85, 170, 170, 20);
           img.setMask(maskGfx.createGeometryMask());
           container.add(img);
         }
       } else if (this.currentQuestion.theme === 'shape') {
-         const imgKey = ['circle','triangle','square'].includes(opt) ? `${opt}_img_1` : null;
-         if (imgKey) {
+         const innerPlate = this.add.graphics();
+         innerPlate.fillStyle(0xffffff, 0.95).fillRoundedRect(-95, -95, 190, 190, 25);
+         container.add(innerPlate);
+
+         const imgKey = ['circle','triangle','square','rectangle'].includes(opt) ? (
+           opt === 'rectangle'
+             ? `rectangle_img_${Phaser.Math.Between(1, 3)}`
+             : `${opt}_img_1`
+         ) : null;
+         if (imgKey && this.textures.exists(imgKey)) {
             const img = this.add.image(0, 0, imgKey);
-            img.setScale(Math.min(220 / img.width, 220 / img.height));
-            const maskGfx = this.make.graphics({ x: container.x, y: container.y }).fillStyle(0xffffff).fillRoundedRect(-110, -110, 220, 220, 30);
+            img.setScale(Math.min(170 / img.width, 170 / img.height));
+            const maskGfx = this.make.graphics({ x: container.x, y: container.y }).fillStyle(0xffffff).fillRoundedRect(-85, -85, 170, 170, 20);
             img.setMask(maskGfx.createGeometryMask());
             container.add(img);
          } else {
-            container.add(this.add.text(0, 0, opt === 'rectangle' ? '🚪' : '❓', { fontSize: '100px' }).setOrigin(0.5));
+            container.add(this.add.text(0, 0, '❓', { fontSize: '100px' }).setOrigin(0.5));
          }
       } else if (this.currentQuestion.theme === 'number') {
-         container.add(this.add.text(0, 0, opt.toString(), { fontSize: '120px', color: '#16a34a', fontStyle: 'bold', fontFamily: 'Fredoka' }).setOrigin(0.5));
+         // High-contrast large white numbers on candy colored solid blocks!
+         container.add(this.add.text(0, 0, opt.toString(), { fontSize: '120px', color: '#ffffff', fontStyle: 'bold', fontFamily: 'Fredoka' }).setOrigin(0.5));
       } else if (this.currentQuestion.theme === 'time') {
+         const innerPlate = this.add.graphics();
+         innerPlate.fillStyle(0xffffff, 0.95).fillRoundedRect(-95, -95, 190, 190, 25);
+         container.add(innerPlate);
+
          let rIdx = Math.floor(Math.random() * 6) + 1;
          if (opt === 'siang' && rIdx === 2) rIdx = 1;
          const imgKey = `${opt}_${rIdx}`;
 
          if (this.textures.exists(imgKey)) {
             const img = this.add.image(0, 0, imgKey);
-            img.setScale(Math.min(220 / img.width, 220 / img.height));
-            const maskGfx = this.make.graphics({ x: container.x, y: container.y }).fillStyle(0xffffff).fillRoundedRect(-110, -110, 220, 220, 30);
+            img.setScale(Math.min(170 / img.width, 170 / img.height));
+            const maskGfx = this.make.graphics({ x: container.x, y: container.y }).fillStyle(0xffffff).fillRoundedRect(-85, -85, 170, 170, 20);
             img.setMask(maskGfx.createGeometryMask());
             container.add(img);
          } else {
             const emojiMap: any = { siang: '☀️', sore: '🌇', malam: '🌙' };
-            container.add(this.add.text(0, 0, emojiMap[opt] || '⏰', { fontSize: '120px' }).setOrigin(0.5));
+            container.add(this.add.text(0, 0, emojiMap[opt] || '⏰', { fontSize: '110px' }).setOrigin(0.5));
          }
       }
 
       this.tweens.add({ targets: container, scale: 1, delay: 200 + (index * 150), duration: 500, ease: 'Back.easeOut', onStart: () => playSound('pop') });
-      bg.on('pointerdown', () => this.handleAnswer(opt, container));
-      bg.on('pointerover', () => { playSound('hover'); this.tweens.add({ targets: container, scale: 1.15, duration: 200 }); this.tweens.add({ targets: halo, alpha: 0.3, scale: 1.1, duration: 200 }); });
-      bg.on('pointerout', () => { this.tweens.add({ targets: container, scale: 1, duration: 200 }); this.tweens.add({ targets: halo, alpha: 0, scale: 1, duration: 200 }); });
+      bg.on('pointerdown', () => {
+        // Fast tactile scale click response!
+        this.tweens.add({ targets: container, scale: 0.92, duration: 80, yoyo: true, onComplete: () => {
+          this.handleAnswer(opt, container);
+        }});
+      });
+      bg.on('pointerover', () => { 
+        playSound('hover'); 
+        this.tweens.add({ targets: container, scale: 1.12, duration: 200, ease: 'Back.easeOut' }); 
+        this.tweens.add({ targets: halo, alpha: 1, duration: 200 }); 
+      });
+      bg.on('pointerout', () => { 
+        this.tweens.add({ targets: container, scale: 1, duration: 200, ease: 'Sine.easeOut' }); 
+        this.tweens.add({ targets: halo, alpha: 0, duration: 200 }); 
+      });
       this.optionObjects.push(container);
       this.questionContainer.add(container);
     });
@@ -172,58 +287,259 @@ export default class MainScene extends Phaser.Scene {
        playSound('wrong');
        this.tweens.add({ targets: container, x: '+=15', duration: 50, yoyo: true, repeat: 3, onComplete: () => {
           this.time.delayedCall(500, () => this.optionObjects.forEach(obj => (obj.getAt(2) as Phaser.GameObjects.Rectangle).setInteractive({ useHandCursor: true })));
-       }});
-    }
+        }});
+     }
   }
 
-  showSuccessPopup() {
+       showSuccessPopup() {
     const centerX = this.cameras.main.centerX, centerY = this.cameras.main.centerY;
-    const bgOverlay = this.add.rectangle(centerX, centerY, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.2).setDepth(100).setInteractive();
+    
+    // Confetti/Star Explosion
+    for (let i = 0; i < 25; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 100 + Math.random() * 200;
+      const starChar = ['⭐', '✨', '🎉', '🎈'][Math.floor(Math.random() * 4)];
+      const size = 20 + Math.random() * 25;
+      const p = this.add.text(centerX, centerY - 50, starChar, { fontSize: `${size}px` }).setOrigin(0.5).setDepth(150);
+      
+      this.tweens.add({
+        targets: p,
+        x: centerX + Math.cos(angle) * speed * 1.5,
+        y: centerY - 50 + Math.sin(angle) * speed * 1.5,
+        alpha: 0,
+        scale: 2.2,
+        angle: Math.random() * 360,
+        duration: 800 + Math.random() * 400,
+        ease: 'Cubic.easeOut',
+        onComplete: () => p.destroy()
+      });
+    }
+
+    const bgOverlay = this.add.rectangle(centerX, centerY, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.4).setDepth(100).setInteractive();
     const popup = this.add.container(centerX, centerY).setDepth(101).setScale(0);
     const box = this.add.graphics();
-    const colors = [0xef4444, 0xf59e0b, 0x10b981, 0x3b82f6, 0x8b5cf6];
-    for(let i=0; i<colors.length; i++) { box.lineStyle(10 - i*2, colors[i], 1).strokeRoundedRect(-260 - i*2, -190 - i*2, 520 + i*4, 380 + i*4, 50); }
-    box.fillStyle(0xffffff, 1).fillRoundedRect(-250, -180, 500, 360, 40);
-    popup.add(box);
-    popup.add(this.add.text(0, -90, "HOREE! ⭐", { fontFamily: 'Fredoka', fontSize: '90px', color: '#f59e0b', fontStyle: 'bold' }).setOrigin(0.5));
-    popup.add(this.add.text(0, 20, "Jawabanmu Benar!", { fontFamily: 'Fredoka', fontSize: '42px', color: '#475569', fontStyle: 'bold' }).setOrigin(0.5));
     
-    const nextBtn = this.add.container(0, 110);
-    const btnBg = this.add.rectangle(0, 0, 300, 90, 0x22c55e, 1).setInteractive({ useHandCursor: true }).setStrokeStyle(6, 0xffffff);
-    nextBtn.add([btnBg, this.add.text(0, 0, "LANJUT", { fontSize: '40px', color: '#ffffff', fontStyle: 'bold', fontFamily: 'Fredoka' }).setOrigin(0.5)]);
+    // Draw beautiful border shadow and outline
+    const colors = [0xffffff, 0xf59e0b, 0xffffff];
+    for (let i = 0; i < colors.length; i++) { 
+      box.lineStyle(8 - i * 2, colors[i], 0.8).strokeRoundedRect(-255 - i * 3, -205 - i * 3, 510 + i * 6, 410 + i * 6, 50); 
+    }
+    // Slightly larger popup card for larger fonts
+    box.fillStyle(0x0ea5e9, 1).fillRoundedRect(-270, -220, 540, 440, 45);
+    popup.add(box);
+    
+    const titleText = this.add.text(0, -140, "HOREE! ⭐", { 
+      fontFamily: 'Fredoka', 
+      fontSize: '64px', 
+      color: '#ffffff', 
+      fontStyle: 'bold' 
+    }).setOrigin(0.5);
+    popup.add(titleText);
+    
+    this.tweens.add({
+      targets: titleText,
+      scale: 1.08,
+      angle: 2,
+      duration: 500,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+
+    const glowStar = this.add.text(0, -35, "🏆", { fontSize: '120px', padding: { top: 20, bottom: 20, left: 20, right: 20 } }).setOrigin(0.5);
+    popup.add(glowStar);
+    this.tweens.add({
+      targets: glowStar,
+      scale: 1.15,
+      angle: 15,
+      yoyo: true,
+      repeat: -1,
+      duration: 800,
+      ease: 'Sine.easeInOut'
+    });
+
+    popup.add(this.add.text(0, 65, "Jawabanmu Benar!", { 
+      fontFamily: 'Fredoka', 
+      fontSize: '32px', 
+      color: '#ffffff', 
+      fontStyle: 'bold' 
+    }).setOrigin(0.5));
+    
+    const nextBtn = this.add.container(0, 145);
+    const btnGfx = this.add.graphics();
+    btnGfx.fillStyle(0x15803d, 1).fillRoundedRect(-180, -45 + 8, 360, 90, 24); // 3D Shadow
+    btnGfx.fillStyle(0x22c55e, 1).fillRoundedRect(-180, -45, 360, 90, 24); // Base
+    btnGfx.lineStyle(6, 0xffffff, 1).strokeRoundedRect(-180, -45, 360, 90, 24); // Outline
+    const btnBg = this.add.rectangle(0, 4, 360, 90, 0xffffff, 0.01).setInteractive({ useHandCursor: true });
+    const btnText = this.add.text(0, 0, "HEBAT! LANJUT", { 
+      fontSize: '28px', 
+      color: '#ffffff', 
+      fontStyle: 'bold', 
+      fontFamily: 'Fredoka',
+      padding: { top: 10, bottom: 10, left: 10, right: 10 }
+    }).setOrigin(0.5);
+    
+    nextBtn.add([btnGfx, btnBg, btnText]);
     popup.add(nextBtn);
+    
     this.tweens.add({ targets: popup, scale: 1, duration: 600, ease: 'Back.easeOut' });
+
+    btnBg.on('pointerover', () => {
+      playSound('hover');
+      this.tweens.add({ targets: nextBtn, scale: 1.1, duration: 150 });
+      btnBg.setFillStyle(0x4ade80);
+    });
+    
+    btnBg.on('pointerout', () => {
+      this.tweens.add({ targets: nextBtn, scale: 1, duration: 150 });
+      btnBg.setFillStyle(0x22c55e);
+    });
+
     btnBg.on('pointerdown', () => {
       btnBg.disableInteractive();
-      this.questionIndex++;
-      this.startNewQuestion();
-      popup.destroy();
-      bgOverlay.destroy();
+      this.tweens.add({
+        targets: nextBtn,
+        scale: 0.9,
+        duration: 100,
+        yoyo: true,
+        onComplete: () => {
+          this.questionIndex++;
+          this.startNewQuestion();
+          popup.destroy();
+          bgOverlay.destroy();
+        }
+      });
     });
   }
 
   showLevelComplete() {
     const centerX = this.cameras.main.centerX, centerY = this.cameras.main.centerY;
     const isPassed = this.correctAnswers >= 7;
-    const bgOverlay = this.add.rectangle(centerX, centerY, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.6).setDepth(200).setInteractive();
+
+    // Celebratory burst for level completion if passed
+    if (isPassed) {
+      for (let i = 0; i < 40; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 150 + Math.random() * 300;
+        const char = ['👑', '⭐', '✨', '🎉', '🏆'][Math.floor(Math.random() * 5)];
+        const size = 24 + Math.random() * 24;
+        const p = this.add.text(centerX, centerY - 80, char, { fontSize: `${size}px` }).setOrigin(0.5).setDepth(250);
+        this.tweens.add({
+          targets: p,
+          x: centerX + Math.cos(angle) * speed * 1.5,
+          y: centerY - 80 + Math.sin(angle) * speed * 1.5,
+          alpha: 0,
+          scale: 2.5,
+          angle: Math.random() * 360,
+          duration: 1200 + Math.random() * 600,
+          ease: 'Cubic.easeOut',
+          onComplete: () => p.destroy()
+        });
+      }
+    }
+
+    const bgOverlay = this.add.rectangle(centerX, centerY, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.5).setDepth(200).setInteractive();
     const winBox = this.add.container(centerX, centerY).setScale(0).setDepth(201);
-    winBox.add(this.add.rectangle(0, 0, 600, 450, 0xffffff, 0.95).setStrokeStyle(10, isPassed ? 0x22c55e : 0xef4444));
-    winBox.add(this.add.text(0, -120, isPassed ? "LUAR BIASA! 🏆" : "AYO COBA LAGI! 💪", { fontSize: '64px', color: isPassed ? '#22c55e' : '#ef4444', fontStyle: 'bold', fontFamily: 'Fredoka' }).setOrigin(0.5));
-    winBox.add(this.add.text(0, 20, isPassed ? `Skor kamu: ${this.correctAnswers}/${this.totalQuestions}\nKamu hebat sekali!` : `Skor kamu: ${this.correctAnswers}/${this.totalQuestions}\nBelajar lagi yuk!`, { fontSize: '32px', color: '#475569', align: 'center', fontFamily: 'Nunito' }).setOrigin(0.5));
-    const btn = this.add.rectangle(0, 150, 350, 80, isPassed ? 0x0284c7 : 0xf59e0b).setInteractive({ useHandCursor: true });
-    winBox.add(btn);
-    winBox.add(this.add.text(0, 150, isPassed ? "SELESAI" : "ULANGI", { fontSize: '32px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5));
+    
+    const boxGfx = this.add.graphics();
+    const borderColors = isPassed ? [0xffffff, 0x22c55e, 0xffffff] : [0xffffff, 0xef4444, 0xffffff];
+    for (let i = 0; i < borderColors.length - 1; i++) {
+      boxGfx.lineStyle(10 - i * 4, borderColors[i], 0.8).strokeRoundedRect(-335 - i * 3, -275 - i * 3, 670 + i * 6, 550 + i * 6, 55);
+    }
+    boxGfx.fillStyle(isPassed ? 0x22c55e : 0xef4444, 1).fillRoundedRect(-330, -270, 660, 540, 50);
+    winBox.add(boxGfx);
+
+    const titleText = this.add.text(0, -185, isPassed ? "LUAR BIASA! 🏆" : "AYO COBA LAGI! 💪", { 
+      fontSize: '72px', 
+      color: '#ffffff', 
+      fontStyle: 'bold', 
+      fontFamily: 'Fredoka' 
+    }).setOrigin(0.5);
+    winBox.add(titleText);
+
+    this.tweens.add({
+      targets: titleText,
+      y: -195,
+      duration: 600,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+
+    const scoreDisplayBox = this.add.graphics();
+    scoreDisplayBox.fillStyle(0xffffff, 0.25).fillRoundedRect(-270, -100, 540, 185, 30);
+    scoreDisplayBox.lineStyle(4, 0xffffff, 0.6).strokeRoundedRect(-270, -100, 540, 185, 30);
+    winBox.add(scoreDisplayBox);
+
+    const scoreText = this.add.text(0, -55, `Skor kamu: ${this.correctAnswers}/${this.totalQuestions}`, { 
+      fontSize: '54px', 
+      color: '#ffffff', 
+      fontStyle: 'bold', 
+      fontFamily: 'Fredoka' 
+    }).setOrigin(0.5);
+    winBox.add(scoreText);
+
+    const descText = this.add.text(0, 25, isPassed ? "Kamu hebat sekali!" : "Belajar lagi yuk!", { 
+      fontSize: '38px', 
+      color: '#ffffff', 
+      fontStyle: 'bold',
+      fontFamily: 'Fredoka' 
+    }).setOrigin(0.5);
+    winBox.add(descText);
+
+    const completeBtn = this.add.container(0, 175);
+    const btnBg = this.add.rectangle(0, 0, 380, 90, isPassed ? 0x0284c7 : 0xf59e0b).setInteractive({ useHandCursor: true }).setStrokeStyle(6, 0xffffff);
+    const btnText = this.add.text(0, 0, isPassed ? "SELESAI" : "ULANGI", { 
+      fontSize: '28px', 
+      color: '#ffffff', 
+      fontStyle: 'bold',
+      fontFamily: 'Fredoka'
+    }).setOrigin(0.5);
+    
+    completeBtn.add([btnBg, btnText]);
+    winBox.add(completeBtn);
+
+    this.tweens.add({
+      targets: completeBtn,
+      scale: 1.05,
+      duration: 700,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+
     this.tweens.add({ targets: winBox, scale: 1, duration: 600, ease: 'Back.easeOut' });
-    btn.on('pointerdown', () => { 
-       btn.disableInteractive();
-       if (isPassed) window.location.href = '/themes';
-       else {
-         this.questionIndex = 0;
-         this.correctAnswers = 0;
-         this.startNewQuestion();
-         winBox.destroy();
-         bgOverlay.destroy();
-       }
+
+    btnBg.on('pointerover', () => {
+      playSound('hover');
+      this.tweens.add({ targets: completeBtn, scale: 1.1, duration: 150 });
+      btnBg.setFillStyle(isPassed ? 0x0ea5e9 : 0xfbbf24);
+    });
+    
+    btnBg.on('pointerout', () => {
+      this.tweens.add({ targets: completeBtn, scale: 1, duration: 150 });
+      btnBg.setFillStyle(isPassed ? 0x0284c7 : 0xf59e0b);
+    });
+
+    btnBg.on('pointerdown', () => { 
+      btnBg.disableInteractive();
+      this.tweens.add({
+        targets: completeBtn,
+        scale: 0.9,
+        duration: 100,
+        yoyo: true,
+        onComplete: () => {
+          if (isPassed) {
+            window.location.href = '/themes';
+          } else {
+            this.questionIndex = 0;
+            this.correctAnswers = 0;
+            this.startNewQuestion();
+            winBox.destroy();
+            bgOverlay.destroy();
+          }
+        }
+      });
     });
   }
 }

@@ -105,32 +105,32 @@ export const LEARNING_DATA: Record<ThemeId, { title: string, items: LearningItem
         subtitle: "Bulat dan melingkar!", 
         desc1: "Lingkaran itu BULAT sekali.",
         desc2: "Seperti BOLA yang membal.",
-        image: "/pengenalan-bentuk/lingkaran/lingkaran1.png",
-        image2: "/pengenalan-bentuk/lingkaran/lingkaran2.png"
+        image: "/lingkaran/Gemini_Generated_Image_7x3ltg7x3ltg7x3l.png",
+        image2: "/lingkaran/Gemini_Generated_Image_9k153d9k153d9k15.png"
       },
       { 
         title: "Segitiga", 
         subtitle: "Punya tiga pojok lancip!", 
         desc1: "Segitiga punya TIGA sisi.",
         desc2: "Seperti TOPI pesta ini.",
-        image: "/pengenalan-bentuk/segitiga/segitiga1.png",
-        image2: "/pengenalan-bentuk/segitiga/segitiga2.png"
+        image: "/segitiga/Gemini_Generated_Image_2o67qu2o67qu2o67.png",
+        image2: "/segitiga/Gemini_Generated_Image_dzs0e3dzs0e3dzs0.png"
       },
       { 
         title: "Persegi", 
         subtitle: "Semua sisinya sama!", 
         desc1: "Persegi punya EMPAT sisi.",
         desc2: "Seperti KOTAK kado ini.",
-        image: "/pengenalan-bentuk/persegi/persegi1.png",
-        image2: "/pengenalan-bentuk/persegi/persegi2.png"
+        image: "/persegi/hilangkan_square_perbesar_persegi_202605111955.jpeg",
+        image2: "/persegi/Square_shape_with_children_learning_202605111950 (1).jpeg"
       },
       { 
         title: "Persegi Panjang", 
         subtitle: "Ada yang panjang, ada yang pendek!", 
         desc1: "Persegi Panjang itu LEBAR.",
         desc2: "Seperti PINTU rumah kita.",
-        image: "/pengenalan-bentuk/persegi/persegi3.png", 
-        image2: "/pengenalan-bentuk/persegi/persegi1.png"
+        image: "/pesergi panjang/pesergi panjang1.png",
+        image2: "/pesergi panjang/pesergi panjang2.png"
       },
     ]
   },

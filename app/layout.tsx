@@ -29,7 +29,7 @@ export default function RootLayout({
       className={`${nunito.variable} ${fredoka.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-sky-50 font-sans" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col bg-sky-50 font-fredoka" suppressHydrationWarning>
         <Navbar />
         {children}
       </body>
