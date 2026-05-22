@@ -7,13 +7,13 @@ export default async function PlayPage({ params }: { params: Promise<{ themeId: 
   const { themeId, levelId } = await params;
   
   return (
-    <div className="flex-1 flex flex-col p-4 bg-sky-50 min-h-[calc(100vh-80px)]">
-      <div className="w-full max-w-5xl mx-auto mb-4 flex items-center">
-        <Link href={`/themes/${themeId}`} className="bg-white p-3 rounded-full shadow-md text-sky-600 hover:bg-sky-100 border-2 border-sky-200">
-          <ArrowLeft size={24} />
+    <div className="fixed inset-0 w-full h-full bg-sky-50 z-0">
+      <div className="absolute top-4 left-4 z-50">
+        <Link href={`/themes/${themeId}`} className="bg-white/80 backdrop-blur-sm p-3 rounded-full shadow-lg text-sky-600 hover:bg-white transition-all hover:scale-110 active:scale-95 flex items-center justify-center">
+          <ArrowLeft size={28} strokeWidth={3} />
         </Link>
       </div>
-      <div className="flex-1 w-full max-w-5xl mx-auto bg-white rounded-3xl border-8 border-sky-300 shadow-xl overflow-hidden relative">
+      <div className="w-full h-full overflow-hidden">
         <PhaserGameWrapper theme={themeId as ThemeId} level={parseInt(levelId) as LevelId} />
       </div>
     </div>

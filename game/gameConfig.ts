@@ -1,19 +1,21 @@
 import Phaser from 'phaser';
+import BootScene from './scenes/BootScene';
 import MainScene from './scenes/MainScene';
+import LearningScene from './scenes/LearningScene';
 import { ThemeId, LevelId } from '../lib/questionGenerator';
 
 export const initGame = (parent: string, theme: ThemeId, level: LevelId) => {
   const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
     parent,
-    width: 800,
-    height: 600,
+    width: window.innerWidth,
+    height: window.innerHeight,
     backgroundColor: '#e0f2fe',
     scale: {
-      mode: Phaser.Scale.FIT,
+      mode: Phaser.Scale.RESIZE,
       autoCenter: Phaser.Scale.CENTER_BOTH,
-      width: 800,
-      height: 600,
+      width: '100%',
+      height: '100%',
     },
     physics: {
       default: 'arcade',
@@ -22,11 +24,15 @@ export const initGame = (parent: string, theme: ThemeId, level: LevelId) => {
         debug: false
       }
     },
-    scene: [MainScene]
+    scene: [BootScene, LearningScene, MainScene]
   };
 
   const game = new Phaser.Game(config);
   game.registry.set('theme', theme);
   game.registry.set('level', level);
+
+  // BootScene will handle the transition based on registry
+  game.scene.start('BootScene');
+
   return game;
 };
