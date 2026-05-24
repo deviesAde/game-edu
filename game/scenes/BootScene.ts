@@ -63,22 +63,89 @@ export default class BootScene extends Phaser.Scene {
       });
     });
 
-    // Progress listener
-    const width = this.cameras.main.width, height = this.cameras.main.height;
+    // Loading Screen UI
+    const width = this.cameras.main.width;
+    const height = this.cameras.main.height;
+    
+    // Background for loading screen
+    const bg = this.add.graphics();
+    bg.fillStyle(0x87CEEB, 1); // Sky blue background
+    bg.fillRect(0, 0, width, height);
+
+    // Decorative circles
+    const decor1 = this.add.graphics();
+    decor1.fillStyle(0xFFFFFF, 0.2);
+    decor1.fillCircle(width * 0.1, height * 0.2, 100);
+    const decor2 = this.add.graphics();
+    decor2.fillStyle(0xFFFFFF, 0.2);
+    decor2.fillCircle(width * 0.9, height * 0.8, 150);
+
     const progressBar = this.add.graphics();
     const progressBox = this.add.graphics();
-    progressBox.fillStyle(0x222222, 0.8);
-    progressBox.fillRect(width/2 - 160, height/2 - 25, 320, 50);
+    
+    // Rounded box
+    progressBox.fillStyle(0xFFFFFF, 0.4);
+    progressBox.fillRoundedRect(width/2 - 160, height/2 - 10, 320, 40, 20);
+    
+    // Loading text
+    const loadingText = this.add.text(width / 2, height / 2 - 50, 'Memuat EduGame...', {
+      font: '28px "Fredoka One", "Comic Sans MS", sans-serif',
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 4,
+      shadow: { offsetX: 2, offsetY: 2, color: '#000', blur: 2, stroke: true, fill: true }
+    });
+    loadingText.setOrigin(0.5, 0.5);
+    
+    // Percent text
+    const percentText = this.add.text(width / 2, height / 2 + 10, '0%', {
+      font: '18px "Fredoka One", Arial, sans-serif',
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 3
+    });
+    percentText.setOrigin(0.5, 0.5);
+
+    // Bouncing dots animation
+    const dot1 = this.add.circle(width / 2 - 30, height / 2 + 60, 8, 0xffd700);
+    const dot2 = this.add.circle(width / 2, height / 2 + 60, 8, 0xff69b4);
+    const dot3 = this.add.circle(width / 2 + 30, height / 2 + 60, 8, 0x00ff00);
+
+    // Apply stroke to dots
+    dot1.setStrokeStyle(2, 0x000000);
+    dot2.setStrokeStyle(2, 0x000000);
+    dot3.setStrokeStyle(2, 0x000000);
+
+    this.tweens.add({
+      targets: [dot1, dot2, dot3],
+      y: height / 2 + 40,
+      duration: 400,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+      delay: this.tweens.stagger(150)
+    });
     
     this.load.on('progress', (value: number) => {
       progressBar.clear();
-      progressBar.fillStyle(0xffffff, 1);
-      progressBar.fillRect(width/2 - 150, height/2 - 15, 300 * value, 30);
+      progressBar.fillStyle(0x4CAF50, 1); // Green progress
+      progressBar.fillRoundedRect(width/2 - 155, height/2 - 5, 310 * value, 30, 15);
+      percentText.setText(Math.floor(value * 100) + '%');
+      // Bring text to top
+      percentText.setDepth(1);
     });
 
     this.load.on('complete', () => {
       progressBar.destroy();
       progressBox.destroy();
+      loadingText.destroy();
+      percentText.destroy();
+      bg.destroy();
+      decor1.destroy();
+      decor2.destroy();
+      dot1.destroy();
+      dot2.destroy();
+      dot3.destroy();
     });
   }
 

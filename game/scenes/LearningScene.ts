@@ -53,7 +53,7 @@ export default class LearningScene extends Phaser.Scene {
     boardContainer.add(titleText);
 
     // --- CONTENT AREA ---
-    this.contentContainer = this.add.container(centerX, centerY - 35);
+    this.contentContainer = this.add.container(centerX, centerY + 10);
 
     // --- NAVIGATION BUTTONS ---
     this.createNavButtons(width, height);
@@ -114,7 +114,7 @@ export default class LearningScene extends Phaser.Scene {
     });
 
     // START PRACTICE BUTTON (Centered at bottom)
-    this.startBtn = this.add.container(width / 2, centerY + 310).setAlpha(0).setScale(0);
+    this.startBtn = this.add.container(width / 2, centerY + 390).setAlpha(0).setScale(0);
     const startGfx = this.add.graphics();
     startGfx.fillStyle(0x15803d, 1).fillRoundedRect(-175, -40 + 8, 350, 80, 24); // Shadow
     startGfx.fillStyle(0x22c55e, 1).fillRoundedRect(-175, -40, 350, 80, 24); // Base
@@ -131,7 +131,7 @@ export default class LearningScene extends Phaser.Scene {
 
     // Progress text
     // Progress text - Changed from blue to slate
-    this.progressText = this.add.text(width / 2, centerY + 180, "", { fontSize: '24px', color: '#475569', fontStyle: 'bold', fontFamily: 'Fredoka' }).setOrigin(0.5);
+    this.progressText = this.add.text(width / 2, centerY + 320, "", { fontSize: '24px', color: '#475569', fontStyle: 'bold', fontFamily: 'Fredoka' }).setOrigin(0.5);
 
     // Hover effects
     [backBg, nextBg, startBg].forEach(btn => {
@@ -171,17 +171,17 @@ export default class LearningScene extends Phaser.Scene {
     // Render based on theme (Simplified for single card)
     const card = this.add.container(0, 0);
     const cardGfx = this.add.graphics();
-    // Compact 3D Shadow (width 820, height 460)
-    cardGfx.fillStyle(0x0284c7, 0.4).fillRoundedRect(-410, -230 + 12, 820, 460, 35);
+    // Larger Card (width 960, height 560)
+    cardGfx.fillStyle(0x0284c7, 0.4).fillRoundedRect(-480, -280 + 12, 960, 560, 35);
     // Base Card
-    cardGfx.fillStyle(0xffffff, 0.96).fillRoundedRect(-410, -230, 820, 460, 35);
+    cardGfx.fillStyle(0xffffff, 0.96).fillRoundedRect(-480, -280, 960, 560, 35);
     // Stroke outline
-    cardGfx.lineStyle(10, 0x0ea5e9, 1).strokeRoundedRect(-410, -230, 820, 460, 35);
+    cardGfx.lineStyle(10, 0x0ea5e9, 1).strokeRoundedRect(-480, -280, 960, 560, 35);
     card.add(cardGfx);
 
     // Remove or hide the blue title if it's the number theme to avoid redundancy
     const titleColor = theme === 'number' ? '#16a34a' : '#0369a1';
-    const title = this.add.text(0, -180, item.title, { 
+    const title = this.add.text(0, -220, item.title, { 
       fontSize: '54px', color: titleColor, fontStyle: 'bold', fontFamily: 'Fredoka' 
     }).setOrigin(0.5);
     
@@ -192,22 +192,22 @@ export default class LearningScene extends Phaser.Scene {
 
     if (theme === 'size' || theme === 'shape' || theme === 'time') {
       if (item.image && item.image2) {
-        // Compact Boxes for images (width 300, height 240)
-        const frame1 = this.add.rectangle(-210, -10, 310, 240, 0xffffff, 1).setStrokeStyle(8, 0xbae6fd).setInteractive();
-        const frame2 = this.add.rectangle(210, -10, 310, 240, 0xffffff, 1).setStrokeStyle(8, 0xbae6fd).setInteractive();
+        // Larger Boxes for images (width 370, height 280)
+        const frame1 = this.add.rectangle(-240, -30, 370, 280, 0xffffff, 1).setStrokeStyle(8, 0xbae6fd).setInteractive();
+        const frame2 = this.add.rectangle(240, -30, 370, 280, 0xffffff, 1).setStrokeStyle(8, 0xbae6fd).setInteractive();
         card.add([frame1, frame2]);
 
-        const img1 = this.add.image(-210, -10, `${theme}_img_${this.currentIndex}_1`).setInteractive();
-        const img2 = this.add.image(210, -10, `${theme}_img_${this.currentIndex}_2`).setInteractive();
+        const img1 = this.add.image(-240, -30, `${theme}_img_${this.currentIndex}_1`).setInteractive();
+        const img2 = this.add.image(240, -30, `${theme}_img_${this.currentIndex}_2`).setInteractive();
         
-        const targetW = 270;
-        const targetH = 200;
+        const targetW = 330;
+        const targetH = 240;
         img1.setScale(Math.min(targetW / img1.width, targetH / img1.height));
         img2.setScale(Math.min(targetW / img2.width, targetH / img2.height));
 
         // Rounded Masks
-        const mask1 = this.make.graphics({}).fillStyle(0xffffff).fillRoundedRect(-210 - targetW/2, -10 - targetH/2, targetW, targetH, 20);
-        const mask2 = this.make.graphics({}).fillStyle(0xffffff).fillRoundedRect(210 - targetW/2, -10 - targetH/2, targetW, targetH, 20);
+        const mask1 = this.make.graphics({}).fillStyle(0xffffff).fillRoundedRect(-240 - targetW/2, -30 - targetH/2, targetW, targetH, 20);
+        const mask2 = this.make.graphics({}).fillStyle(0xffffff).fillRoundedRect(240 - targetW/2, -30 - targetH/2, targetW, targetH, 20);
         
         img1.setMask(mask1.createGeometryMask());
         img2.setMask(mask2.createGeometryMask());
@@ -223,65 +223,159 @@ export default class LearningScene extends Phaser.Scene {
           img.on('pointerout', () => {
             this.tweens.add({ targets: img, scale: Math.min(targetW / img.width, targetH / img.height), duration: 200 });
           });
+          img.on('pointerdown', () => {
+            playSound('pop');
+            this.showImagePreview(img.texture.key);
+          });
         });
         
-        // Comparison Graphic (Double Arrow) - Hide for time as it's not a comparison usually, or keep it as a sequence
+        // Comparison Graphic (Double Arrow)
         if (theme !== 'time') {
+          const arrowContainer = this.add.container(0, -30);
+          
+          const arrowPath = new Phaser.Geom.Polygon([
+             22, -14,
+             22, -30,
+             55, 0,
+             22, 30,
+             22, 14,
+             -22, 14,
+             -22, 30,
+             -55, 0,
+             -22, -30,
+             -22, -14
+          ]);
+          
+          // Shadow
+          const shadowGfx = this.add.graphics();
+          shadowGfx.fillStyle(0x000000, 0.15);
+          const shadowPoints = arrowPath.points.map(p => ({ x: p.x, y: p.y + 6 }));
+          shadowGfx.fillPoints(shadowPoints, true);
+          
+          // Solid arrow
           const arrowGfx = this.add.graphics();
-          arrowGfx.lineStyle(12, 0xf59e0b, 1);
-          arrowGfx.lineBetween(-40, -10, 40, -10);
-          arrowGfx.lineBetween(-40, -10, -25, -25);
-          arrowGfx.lineBetween(-40, -10, -25, 5);
-          arrowGfx.lineBetween(40, -10, 25, -25);
-          arrowGfx.lineBetween(40, -10, 25, 5);
-          card.add(arrowGfx);
+          arrowGfx.fillStyle(0xf59e0b, 1);
+          arrowGfx.fillPoints(arrowPath.points, true);
+          arrowGfx.lineStyle(6, 0xffffff, 1);
+          arrowGfx.strokePoints(arrowPath.points, true, true);
+          
+          arrowContainer.add([shadowGfx, arrowGfx]);
+          
+          this.tweens.add({
+             targets: arrowContainer,
+             scale: 1.1,
+             duration: 700,
+             yoyo: true,
+             repeat: -1,
+             ease: 'Sine.easeInOut'
+          });
+          
+          card.add(arrowContainer);
         }
 
         // Separate Descriptions
         if (item.desc1) {
-          const d1 = this.add.text(-210, 130, item.desc1, { 
-            fontSize: '28px', color: '#0369a1', fontStyle: 'bold', align: 'center', wordWrap: { width: 300 }, fontFamily: 'Fredoka' 
-          }).setOrigin(0.5);
+          const d1 = this.add.text(-240, 130, item.desc1, { 
+            fontSize: '28px', color: '#0369a1', fontStyle: 'bold', align: 'center', wordWrap: { width: 350 }, fontFamily: 'Fredoka' 
+          }).setOrigin(0.5, 0);
           card.add(d1);
         }
         if (item.desc2) {
-          const d2 = this.add.text(210, 130, item.desc2, { 
-            fontSize: '28px', color: '#0369a1', fontStyle: 'bold', align: 'center', wordWrap: { width: 300 }, fontFamily: 'Fredoka' 
-          }).setOrigin(0.5);
+          const d2 = this.add.text(240, 130, item.desc2, { 
+            fontSize: '28px', color: '#0369a1', fontStyle: 'bold', align: 'center', wordWrap: { width: 350 }, fontFamily: 'Fredoka' 
+          }).setOrigin(0.5, 0);
           card.add(d2);
         }
       }
     } else if (theme === 'number') {
-      const num = this.add.text(0, -110, item.title, { 
-        fontSize: '180px', color: '#16a34a', fontStyle: 'bold', fontFamily: 'Fredoka' 
+      const num = this.add.text(0, -150, item.title, { 
+        fontSize: '220px', color: '#16a34a', fontStyle: 'bold', fontFamily: 'Fredoka',
+        stroke: '#ffffff', strokeThickness: 14,
+        padding: { top: 40, bottom: 40, left: 40, right: 40 }
       }).setOrigin(0.5);
       
       let iconsStr = "";
       const count = this.currentIndex + 1;
-      for(let i=0; i<count; i++) iconsStr += item.icon;
+      for(let i=0; i<count; i++) iconsStr += item.icon + " ";
       
-      const fSize = count >= 7 ? '55px' : (count > 4 ? '75px' : '100px');
-      const icons = this.add.text(0, 35, iconsStr, { 
-        fontSize: fSize, wordWrap: { width: 700 }, align: 'center', lineSpacing: 6
+      const fSize = count >= 7 ? '65px' : (count > 4 ? '90px' : '120px');
+      const icons = this.add.text(0, 60, iconsStr.trim(), { 
+        fontSize: fSize, wordWrap: { width: 850 }, align: 'center', lineSpacing: 10,
+        padding: { top: 30, bottom: 30, left: 30, right: 30 }
       }).setOrigin(0.5);
       
       card.add([num, icons]);
     }
 
-    const subtitle = this.add.text(0, 185, item.subtitle, { 
-      fontSize: '32px', color: '#475569', align: 'center', wordWrap: { width: 750 }, fontStyle: 'italic', fontFamily: 'Fredoka' 
+    const subtitle = this.add.text(0, 225, item.subtitle, { 
+      fontSize: '36px', color: '#475569', align: 'center', wordWrap: { width: 850 }, fontStyle: 'italic', fontFamily: 'Fredoka' 
     }).setOrigin(0.5);
     card.add(subtitle);
 
     // Decorative Stars (Corrected positions and added padding to prevent clipping)
     for (let i = 0; i < 4; i++) {
-      const star = this.add.text(i % 2 === 0 ? -370 : 370, i < 2 ? -190 : 190, '⭐', { fontSize: '40px', padding: { top: 12, bottom: 12, left: 12, right: 12 } }).setOrigin(0.5);
+      const star = this.add.text(i % 2 === 0 ? -440 : 440, i < 2 ? -240 : 240, '⭐', { fontSize: '40px', padding: { top: 12, bottom: 12, left: 12, right: 12 } }).setOrigin(0.5);
       card.add(star);
       this.tweens.add({ targets: star, scale: 1.3, duration: 1000 + i*200, yoyo: true, repeat: -1 });
     }
 
     this.contentContainer.add(card);
     this.tweens.add({ targets: this.contentContainer, alpha: 1, scale: 1, duration: 500, ease: 'Back.easeOut' });
+  }
+
+  showImagePreview(textureKey: string) {
+    const camW = this.cameras.main.width;
+    const camH = this.cameras.main.height;
+    const camX = camW / 2;
+    const camY = camH / 2;
+
+    // Dark overlay
+    const overlay = this.add.rectangle(camX, camY, camW, camH, 0x000000, 0)
+      .setDepth(300)
+      .setInteractive();
+    this.tweens.add({ targets: overlay, fillAlpha: 0.75, duration: 250 });
+
+    // Preview container
+    const popup = this.add.container(camX, camY).setDepth(301).setScale(0.7).setAlpha(0);
+
+    // White card background
+    const card = this.add.graphics();
+    card.fillStyle(0xffffff, 1).fillRoundedRect(-370, -280, 740, 560, 30);
+    card.lineStyle(8, 0x0ea5e9, 1).strokeRoundedRect(-370, -280, 740, 560, 30);
+    popup.add(card);
+
+    // Preview image
+    const previewImg = this.add.image(0, -10, textureKey);
+    const maxW = 680, maxH = 460;
+    const scl = Math.min(maxW / previewImg.width, maxH / previewImg.height);
+    previewImg.setScale(scl).setOrigin(0.5);
+    popup.add(previewImg);
+
+    // Close hint text
+    const hint = this.add.text(0, 255, '✕  Ketuk untuk menutup', {
+      fontFamily: 'Fredoka', fontSize: '26px', color: '#64748b', fontStyle: 'bold'
+    }).setOrigin(0.5);
+    popup.add(hint);
+
+    // Animate in
+    this.tweens.add({ targets: popup, alpha: 1, scale: 1, duration: 350, ease: 'Back.easeOut' });
+
+    const closePreview = () => {
+      this.tweens.add({
+        targets: [popup, overlay],
+        alpha: 0,
+        scale: { value: 0.8, duration: 200 },
+        duration: 200,
+        ease: 'Sine.easeIn',
+        onComplete: () => {
+          popup.destroy();
+          overlay.destroy();
+        }
+      });
+    };
+
+    overlay.on('pointerdown', closePreview);
+    card.setInteractive(new Phaser.Geom.Rectangle(-370, -280, 740, 560), Phaser.Geom.Rectangle.Contains);
   }
 
   spawnFlowers() {

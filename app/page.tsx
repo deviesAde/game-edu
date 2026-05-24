@@ -28,7 +28,7 @@ export default function Home() {
         </div>
         
         <h1 className="text-6xl md:text-8xl font-black text-sky-600 mb-8 drop-shadow-[0_4px_4px_rgba(0,0,0,0.1)] tracking-tight leading-none">
-          DUNIA <span className="text-pink-500 drop-shadow-[0_4px_0_#db2777]">ANGKA</span>
+          DUNIA <span className="text-pink-500 drop-shadow-[0_4px_0_#db2777]">MATEMATIKA</span>
         </h1>
         
         <p className="text-2xl md:text-3xl text-slate-600 mb-14 font-bold max-w-md mx-auto leading-tight">

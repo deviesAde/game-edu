@@ -26,6 +26,37 @@ export default class MainScene extends Phaser.Scene {
     this.createEnhancedBackground(theme);
     this.questionContainer = this.add.container(0, 0);
     this.startNewQuestion();
+
+    // --- BACK BUTTON ---
+    const height = this.cameras.main.height;
+    const backBtn = this.add.container(120, height - 80);
+    const backGfx = this.add.graphics();
+    backGfx.fillStyle(0xc2410c, 1).fillRoundedRect(-80, -35 + 6, 160, 70, 20); // Shadow
+    backGfx.fillStyle(0xf59e0b, 1).fillRoundedRect(-80, -35, 160, 70, 20); // Base
+    backGfx.lineStyle(5, 0xffffff, 1).strokeRoundedRect(-80, -35, 160, 70, 20); // Outline
+    
+    const backBg = this.add.rectangle(0, 0, 160, 70, 0xffffff, 0).setInteractive({ useHandCursor: true });
+    const backText = this.add.text(0, 0, "KEMBALI", { 
+      fontSize: '24px', color: '#ffffff', fontStyle: 'bold', fontFamily: 'Fredoka' 
+    }).setOrigin(0.5);
+    
+    backBtn.add([backGfx, backBg, backText]);
+    
+    backBg.on('pointerdown', () => {
+       playSound('pop');
+       this.tweens.add({ targets: backBtn, scale: 0.9, duration: 100, yoyo: true, onComplete: () => {
+         window.location.href = '/themes';
+       }});
+    });
+    
+    backBg.on('pointerover', () => {
+       playSound('hover');
+       this.tweens.add({ targets: backBtn, scale: 1.1, duration: 150 });
+    });
+    
+    backBg.on('pointerout', () => {
+       this.tweens.add({ targets: backBtn, scale: 1, duration: 150 });
+    });
   }
 
   startNewQuestion() {
@@ -45,16 +76,19 @@ export default class MainScene extends Phaser.Scene {
     
     this.currentQuestion = nextQ;
 
+    const isNumber = this.currentQuestion.theme === 'number';
+    const boardY = isNumber ? 180 : 220; // Lowered slightly so it's not hidden by navbar
+
     // --- QUESTION BOARD ---
-    const boardContainer = this.add.container(centerX, 220).setScale(0);
+    const boardContainer = this.add.container(centerX, boardY).setScale(0);
     const boardGraphics = this.add.graphics();
-    // Compact, square-ish rounded rectangle (width 720, height 140, corner radius 28)
-    boardGraphics.fillStyle(0x0ea5e9, 0.95).fillRoundedRect(-360, -70, 720, 140, 28);
-    boardGraphics.lineStyle(6, 0xffffff, 1).strokeRoundedRect(-360, -70, 720, 140, 28);
+    // Thinner board (width 720, height 100) to save space
+    boardGraphics.fillStyle(0x0ea5e9, 0.95).fillRoundedRect(-360, -50, 720, 100, 24);
+    boardGraphics.lineStyle(6, 0xffffff, 1).strokeRoundedRect(-360, -50, 720, 100, 24);
     boardContainer.add(boardGraphics);
     
     const qText = this.add.text(0, 0, this.currentQuestion.questionText, {
-      fontFamily: 'Fredoka', fontSize: '48px', color: '#ffffff', align: 'center', wordWrap: { width: 660 }, fontStyle: 'bold'
+      fontFamily: 'Fredoka', fontSize: '38px', color: '#ffffff', align: 'center', wordWrap: { width: 680 }, fontStyle: 'bold'
     }).setOrigin(0.5);
     boardContainer.add(qText);
     this.tweens.add({ targets: boardContainer, scale: 1, duration: 600, ease: 'Back.easeOut' });
@@ -65,14 +99,21 @@ export default class MainScene extends Phaser.Scene {
        let fruitString = '';
        for(let i=0; i<this.currentQuestion.correctAnswer; i++) fruitString += `${fruit} `;
        
-       const boxW = 840, boxH = 140, boxX = centerX - 420, boxY = 260;
-       const fBox = this.add.graphics().fillStyle(0xffffff, 0.9).fillRoundedRect(boxX, boxY, boxW, boxH, 40).lineStyle(8, 0x22c55e, 1).strokeRoundedRect(boxX, boxY, boxW, boxH, 40).setAlpha(0);
+       // Thinner fruit box placed right under the question board
+       const boxW = 800, boxH = 120, boxX = centerX - 400, boxY = boardY + 60; 
+       const fBox = this.add.graphics().fillStyle(0xffffff, 0.9).fillRoundedRect(boxX, boxY, boxW, boxH, 30).lineStyle(6, 0x22c55e, 1).strokeRoundedRect(boxX, boxY, boxW, boxH, 30).setAlpha(0);
        this.tweens.add({ targets: fBox, alpha: 1, duration: 400 });
        this.questionContainer.add(fBox);
 
-       const maskGfx = this.make.graphics({}).fillStyle(0xffffff).fillRoundedRect(boxX, boxY, boxW, boxH, 40);
-       const fSize = this.currentQuestion.correctAnswer >= 7 ? '65px' : (this.currentQuestion.correctAnswer > 4 ? '85px' : '110px');
-       const fText = this.add.text(centerX, 330, fruitString.trim(), { fontSize: fSize, wordWrap: { width: boxW - 80 }, align: 'center' }).setOrigin(0.5).setScale(0);
+       const maskGfx = this.make.graphics({}).fillStyle(0xffffff).fillRoundedRect(boxX, boxY, boxW, boxH, 30);
+       // Reduced font size slightly so the fruits are not too big
+       const fSize = this.currentQuestion.correctAnswer >= 7 ? '45px' : (this.currentQuestion.correctAnswer > 4 ? '60px' : '75px');
+       const fText = this.add.text(centerX, boxY + boxH / 2, fruitString.trim(), { 
+         fontSize: fSize, 
+         wordWrap: { width: boxW - 60 }, 
+         align: 'center',
+         padding: { top: 20, bottom: 20, left: 20, right: 20 }
+       }).setOrigin(0.5).setScale(0);
        fText.setMask(maskGfx.createGeometryMask());
        this.tweens.add({ targets: fText, scale: 1, duration: 600, ease: 'Back.easeOut' });
        this.questionContainer.add(fText);
@@ -367,39 +408,66 @@ export default class MainScene extends Phaser.Scene {
     
     const nextBtn = this.add.container(0, 145);
     const btnGfx = this.add.graphics();
-    btnGfx.fillStyle(0x15803d, 1).fillRoundedRect(-180, -45 + 8, 360, 90, 24); // 3D Shadow
-    btnGfx.fillStyle(0x22c55e, 1).fillRoundedRect(-180, -45, 360, 90, 24); // Base
-    btnGfx.lineStyle(6, 0xffffff, 1).strokeRoundedRect(-180, -45, 360, 90, 24); // Outline
-    const btnBg = this.add.rectangle(0, 4, 360, 90, 0xffffff, 0.01).setInteractive({ useHandCursor: true });
+    // 3D Shadow
+    btnGfx.fillStyle(0x15803d, 1).fillRoundedRect(-180, -45 + 8, 360, 90, 45); 
+    // Base
+    btnGfx.fillStyle(0x22c55e, 1).fillRoundedRect(-180, -45, 360, 90, 45); 
+    // Outline
+    btnGfx.lineStyle(6, 0xffffff, 1).strokeRoundedRect(-180, -45, 360, 90, 45);
+    
+    // Glossy Highlight
+    const highlight = this.add.graphics();
+    highlight.fillStyle(0xffffff, 0.3).fillRoundedRect(-150, -35, 300, 20, 10);
+    
+    const btnHoverLayer = this.add.graphics();
+    btnHoverLayer.fillStyle(0xffffff, 0.2).fillRoundedRect(-180, -45, 360, 90, 45);
+    btnHoverLayer.setAlpha(0);
+
+    const btnBg = this.add.rectangle(0, 0, 360, 90, 0xffffff, 0).setInteractive({ useHandCursor: true });
+    
     const btnText = this.add.text(0, 0, "HEBAT! LANJUT", { 
-      fontSize: '28px', 
+      fontSize: '32px', 
       color: '#ffffff', 
       fontStyle: 'bold', 
-      fontFamily: 'Fredoka',
-      padding: { top: 10, bottom: 10, left: 10, right: 10 }
+      fontFamily: '"Fredoka One", "Comic Sans MS", sans-serif',
+      stroke: '#15803d',
+      strokeThickness: 5,
+      shadow: { offsetX: 2, offsetY: 2, color: '#15803d', blur: 0, stroke: true, fill: true }
     }).setOrigin(0.5);
     
-    nextBtn.add([btnGfx, btnBg, btnText]);
+    nextBtn.add([btnGfx, highlight, btnHoverLayer, btnBg, btnText]);
     popup.add(nextBtn);
     
     this.tweens.add({ targets: popup, scale: 1, duration: 600, ease: 'Back.easeOut' });
 
+    // Subtle breathing pulse
+    this.tweens.add({
+      targets: nextBtn,
+      scale: 1.03,
+      duration: 800,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+
     btnBg.on('pointerover', () => {
       playSound('hover');
+      this.tweens.add({ targets: btnHoverLayer, alpha: 1, duration: 150 });
       this.tweens.add({ targets: nextBtn, scale: 1.1, duration: 150 });
-      btnBg.setFillStyle(0x4ade80);
     });
     
     btnBg.on('pointerout', () => {
-      this.tweens.add({ targets: nextBtn, scale: 1, duration: 150 });
-      btnBg.setFillStyle(0x22c55e);
+      this.tweens.add({ targets: btnHoverLayer, alpha: 0, duration: 150 });
+      this.tweens.add({ targets: nextBtn, scale: 1.03, duration: 150 });
     });
 
     btnBg.on('pointerdown', () => {
       btnBg.disableInteractive();
+      this.tweens.killTweensOf(nextBtn);
       this.tweens.add({
         targets: nextBtn,
         scale: 0.9,
+        y: 152, // slight press down effect
         duration: 100,
         yoyo: true,
         onComplete: () => {
@@ -488,21 +556,44 @@ export default class MainScene extends Phaser.Scene {
     winBox.add(descText);
 
     const completeBtn = this.add.container(0, 175);
-    const btnBg = this.add.rectangle(0, 0, 380, 90, isPassed ? 0x0284c7 : 0xf59e0b).setInteractive({ useHandCursor: true }).setStrokeStyle(6, 0xffffff);
+    const btnGfx = this.add.graphics();
+    const baseColor = isPassed ? 0x0284c7 : 0xf59e0b;
+    const shadowColor = isPassed ? 0x0369a1 : 0xd97706;
+    
+    // 3D Shadow
+    btnGfx.fillStyle(shadowColor, 1).fillRoundedRect(-190, -45 + 8, 380, 90, 45); 
+    // Base
+    btnGfx.fillStyle(baseColor, 1).fillRoundedRect(-190, -45, 380, 90, 45); 
+    // Outline
+    btnGfx.lineStyle(6, 0xffffff, 1).strokeRoundedRect(-190, -45, 380, 90, 45);
+    
+    // Glossy Highlight
+    const highlight = this.add.graphics();
+    highlight.fillStyle(0xffffff, 0.3).fillRoundedRect(-160, -35, 320, 20, 10);
+    
+    const btnHoverLayer = this.add.graphics();
+    btnHoverLayer.fillStyle(0xffffff, 0.2).fillRoundedRect(-190, -45, 380, 90, 45);
+    btnHoverLayer.setAlpha(0);
+
+    const btnBg = this.add.rectangle(0, 0, 380, 90, 0xffffff, 0).setInteractive({ useHandCursor: true });
+    
     const btnText = this.add.text(0, 0, isPassed ? "SELESAI" : "ULANGI", { 
-      fontSize: '28px', 
+      fontSize: '32px', 
       color: '#ffffff', 
       fontStyle: 'bold',
-      fontFamily: 'Fredoka'
+      fontFamily: '"Fredoka One", "Comic Sans MS", sans-serif',
+      stroke: isPassed ? '#0369a1' : '#d97706',
+      strokeThickness: 5,
+      shadow: { offsetX: 2, offsetY: 2, color: isPassed ? '#0369a1' : '#d97706', blur: 0, stroke: true, fill: true }
     }).setOrigin(0.5);
     
-    completeBtn.add([btnBg, btnText]);
+    completeBtn.add([btnGfx, highlight, btnHoverLayer, btnBg, btnText]);
     winBox.add(completeBtn);
 
     this.tweens.add({
       targets: completeBtn,
-      scale: 1.05,
-      duration: 700,
+      scale: 1.03,
+      duration: 800,
       yoyo: true,
       repeat: -1,
       ease: 'Sine.easeInOut'
@@ -512,20 +603,22 @@ export default class MainScene extends Phaser.Scene {
 
     btnBg.on('pointerover', () => {
       playSound('hover');
+      this.tweens.add({ targets: btnHoverLayer, alpha: 1, duration: 150 });
       this.tweens.add({ targets: completeBtn, scale: 1.1, duration: 150 });
-      btnBg.setFillStyle(isPassed ? 0x0ea5e9 : 0xfbbf24);
     });
     
     btnBg.on('pointerout', () => {
-      this.tweens.add({ targets: completeBtn, scale: 1, duration: 150 });
-      btnBg.setFillStyle(isPassed ? 0x0284c7 : 0xf59e0b);
+      this.tweens.add({ targets: btnHoverLayer, alpha: 0, duration: 150 });
+      this.tweens.add({ targets: completeBtn, scale: 1.03, duration: 150 });
     });
 
     btnBg.on('pointerdown', () => { 
       btnBg.disableInteractive();
+      this.tweens.killTweensOf(completeBtn);
       this.tweens.add({
         targets: completeBtn,
         scale: 0.9,
+        y: 182, // slight press down effect
         duration: 100,
         yoyo: true,
         onComplete: () => {
