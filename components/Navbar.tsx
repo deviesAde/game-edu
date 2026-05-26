@@ -2,11 +2,15 @@
 
 import Link from "next/link";
 import { Home, Music, Music4, LayoutGrid } from "lucide-react";
-import { useState } from "react";
-import { toggleBGM } from "@/lib/sound";
+import { useState, useEffect } from "react";
+import { toggleBGM, getBGMState } from "@/lib/sound";
 
 export default function Navbar() {
   const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    setIsPlaying(getBGMState());
+  }, []);
 
   const handleToggleMusic = () => {
     const newState = toggleBGM();

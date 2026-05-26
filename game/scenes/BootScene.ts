@@ -16,15 +16,15 @@ export default class BootScene extends Phaser.Scene {
 
     // Load Size assets
     const sizeMap = {
-      'besar-kecil': ['gajah besar.png', 'semut kecil.png'],
-      'panjang-pendek': ['ular panjang.png', 'ulat pendek.jpeg'],
-      'tinggi-rendah': ['dino tinggi.jpeg', 'kucing rendah.jpeg'],
-      'berat-ringan': ['batu berat.jpeg', 'balon ringan.jpeg'],
+      'besar-kecil': ['gajah.png', 'semut.png'],
+      'panjang-pendek': ['ular.png', 'ulat.png'],
+      'tinggi-rendah': ['jerapah.png', 'ayam.png'],
+      'berat-ringan': ['batu.png', 'balon.png'],
       'tebal-tipis': ['buku tebal.jpeg', 'kertas tipis.jpeg'],
       'banyak-sedikti': ['buah banyak.jpeg', 'buah sedikit.jpeg'],
       'jauh-dekat': ['rumah jauh.jpeg', 'rumah dekat.jpeg'],
-      'kosong-penuh': ['gelas penuh.jpeg', 'gelas kosong.jpeg'],
-      'cepat-lambat': ['kancil cepat.jpeg', 'kura kura.jpeg'],
+      'kosong-penuh': ['gelaspenuh.png', 'gelas kosong.png'],
+      'cepat-lambat': ['kelinci.png', 'kura-kura.png'],
       'luas-sempit': ['luas.jpeg', 'sempit.jpeg']
     };
 
@@ -35,21 +35,26 @@ export default class BootScene extends Phaser.Scene {
     });
 
     // Load Shape assets
-    if (!this.textures.exists('circle_img_1')) this.load.image('circle_img_1', '/lingkaran/Gemini_Generated_Image_7x3ltg7x3ltg7x3l.png');
-    if (!this.textures.exists('square_img_1')) this.load.image('square_img_1', '/persegi/ChatGPT Image May 11, 2026, 07_57_59 PM.png');
-    if (!this.textures.exists('triangle_img_1')) this.load.image('triangle_img_1', '/segitiga/Gemini_Generated_Image_2o67qu2o67qu2o67.png');
-    if (!this.textures.exists('rectangle_img_1')) this.load.image('rectangle_img_1', '/pesergi panjang/pesergi panjang1.png');
-    if (!this.textures.exists('rectangle_img_2')) this.load.image('rectangle_img_2', '/pesergi panjang/pesergi panjang2.png');
-    if (!this.textures.exists('rectangle_img_3')) this.load.image('rectangle_img_3', '/pesergi panjang/pesergi panjang3.png');
+    if (!this.textures.exists('circle_img_1')) this.load.image('circle_img_1', '/lingkaran/lingkaran1.png');
+    if (!this.textures.exists('square_img_1')) this.load.image('square_img_1', '/persegi/pesergi1.png');
+    if (!this.textures.exists('triangle_img_1')) this.load.image('triangle_img_1', '/segitiga/segitiga1.png');
+    if (!this.textures.exists('rectangle_img_1')) this.load.image('rectangle_img_1', '/pesergi panjang/pesergipanjang1.png');
+    if (!this.textures.exists('rectangle_img_2')) this.load.image('rectangle_img_2', '/pesergi panjang/pesergipanjang2.png');
+    if (!this.textures.exists('rectangle_img_3')) this.load.image('rectangle_img_3', '/pesergi panjang/pesergipanjang3.png');
 
-    // Load Time assets
-    const timeStages = ['siang', 'sore', 'malam'];
+    // Load Time assets (Pagi, Siang, Malam - 3 images each)
+    const timeStages = ['siang', 'pagi', 'malam'];
     timeStages.forEach(stage => {
-       for(let i=1; i<=6; i++) {
-          if (stage === 'siang' && i === 2) continue;
+       for(let i=1; i<=3; i++) {
           const key = `${stage}_${i}`;
           if (!this.textures.exists(key)) {
-            this.load.image(key, `/waktu/${stage}/${stage} (${i}).jpeg`);
+             let fileName = "";
+             if (stage === 'siang' && i === 1) {
+                fileName = 'siang.png';
+             } else {
+                fileName = `${stage}${i}.png`;
+             }
+             this.load.image(key, `/waktu/${stage}/${fileName}`);
           }
        }
     });

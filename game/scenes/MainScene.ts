@@ -1,7 +1,7 @@
 "use client";
 
 import Phaser from 'phaser';
-import { generateQuestion, ThemeId, LevelId, Question } from '../../lib/questionGenerator';
+import { generateQuestion, generateQuestionList, ThemeId, LevelId, Question } from '../../lib/questionGenerator';
 import { addTokens } from '../../lib/storage';
 import { playSound } from '../../lib/sound';
 
@@ -12,6 +12,7 @@ export default class MainScene extends Phaser.Scene {
   private totalQuestions: number = 10;
   private questionContainer!: Phaser.GameObjects.Container;
   private optionObjects: Phaser.GameObjects.Container[] = [];
+  private questionsList: Question[] = [];
 
   constructor() {
     super('MainScene');
@@ -23,6 +24,9 @@ export default class MainScene extends Phaser.Scene {
 
   create() {
     const theme = this.registry.get('theme') as ThemeId || 'size';
+    const level = this.registry.get('level') as LevelId || 2;
+    this.questionsList = generateQuestionList(theme, level, this.totalQuestions);
+
     this.createEnhancedBackground(theme);
     this.questionContainer = this.add.container(0, 0);
     this.startNewQuestion();
@@ -67,7 +71,7 @@ export default class MainScene extends Phaser.Scene {
     this.questionContainer.removeAll(true);
     this.optionObjects = [];
 
-    const nextQ = generateQuestion(theme, level, this.questionIndex);
+    const nextQ = this.questionsList[this.questionIndex];
     
     if (!nextQ || this.questionIndex >= this.totalQuestions) {
        this.showLevelComplete();
@@ -272,8 +276,7 @@ export default class MainScene extends Phaser.Scene {
          innerPlate.fillStyle(0xffffff, 0.95).fillRoundedRect(-95, -95, 190, 190, 25);
          container.add(innerPlate);
 
-         let rIdx = Math.floor(Math.random() * 6) + 1;
-         if (opt === 'siang' && rIdx === 2) rIdx = 1;
+         let rIdx = Math.floor(Math.random() * 3) + 1;
          const imgKey = `${opt}_${rIdx}`;
 
          if (this.textures.exists(imgKey)) {
@@ -283,7 +286,7 @@ export default class MainScene extends Phaser.Scene {
             img.setMask(maskGfx.createGeometryMask());
             container.add(img);
          } else {
-            const emojiMap: any = { siang: '☀️', sore: '🌇', malam: '🌙' };
+            const emojiMap: any = { siang: '☀️', pagi: '🌅', malam: '🌙' };
             container.add(this.add.text(0, 0, emojiMap[opt] || '⏰', { fontSize: '110px' }).setOrigin(0.5));
          }
       }
@@ -462,6 +465,7 @@ export default class MainScene extends Phaser.Scene {
     });
 
     btnBg.on('pointerdown', () => {
+      playSound('pop');
       btnBg.disableInteractive();
       this.tweens.killTweensOf(nextBtn);
       this.tweens.add({
@@ -481,6 +485,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   showLevelComplete() {
+    playSound('success');
     const centerX = this.cameras.main.centerX, centerY = this.cameras.main.centerY;
     const isPassed = this.correctAnswers >= 7;
 
@@ -613,6 +618,7 @@ export default class MainScene extends Phaser.Scene {
     });
 
     btnBg.on('pointerdown', () => { 
+      playSound('pop');
       btnBg.disableInteractive();
       this.tweens.killTweensOf(completeBtn);
       this.tweens.add({
@@ -627,6 +633,9 @@ export default class MainScene extends Phaser.Scene {
           } else {
             this.questionIndex = 0;
             this.correctAnswers = 0;
+            const theme = this.registry.get('theme') as ThemeId || 'size';
+            const level = this.registry.get('level') as LevelId || 2;
+            this.questionsList = generateQuestionList(theme, level, this.totalQuestions);
             this.startNewQuestion();
             winBox.destroy();
             bgOverlay.destroy();

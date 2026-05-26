@@ -76,8 +76,8 @@ export default class LearningScene extends Phaser.Scene {
     this.backBtn.add([backGfx, backBg, backText]);
     
     backBg.on('pointerdown', () => {
+      playSound('pop');
       if (this.currentIndex > 0) {
-        playSound('pop');
         this.currentIndex--;
         this.showItem(this.registry.get('theme'));
       }
@@ -94,10 +94,10 @@ export default class LearningScene extends Phaser.Scene {
     this.nextBtn.add([nextGfx, nextBg, nextText]);
     
     nextBg.on('pointerdown', () => {
+      playSound('pop');
       const theme = this.registry.get('theme') as ThemeId;
       const data = LEARNING_DATA[theme];
       if (this.currentIndex < data.items.length - 1) {
-        playSound('pop');
         this.currentIndex++;
         this.showItem(theme);
       }
@@ -249,7 +249,7 @@ export default class LearningScene extends Phaser.Scene {
           // Shadow
           const shadowGfx = this.add.graphics();
           shadowGfx.fillStyle(0x000000, 0.15);
-          const shadowPoints = arrowPath.points.map(p => ({ x: p.x, y: p.y + 6 }));
+          const shadowPoints = arrowPath.points.map(p => new Phaser.Math.Vector2(p.x, p.y + 6));
           shadowGfx.fillPoints(shadowPoints, true);
           
           // Solid arrow
@@ -361,6 +361,7 @@ export default class LearningScene extends Phaser.Scene {
     this.tweens.add({ targets: popup, alpha: 1, scale: 1, duration: 350, ease: 'Back.easeOut' });
 
     const closePreview = () => {
+      playSound('pop');
       this.tweens.add({
         targets: [popup, overlay],
         alpha: 0,

@@ -20,32 +20,32 @@ export const LEARNING_DATA: Record<ThemeId, { title: string, items: LearningItem
         subtitle: "Gajah itu BESAR, Semut itu KECIL!", 
         desc1: "Gajah sangat BESAR!",
         desc2: "Semut sangat KECIL!",
-        image: "/pengenalan-ukuran/besar-kecil/gajah besar.png",
-        image2: "/pengenalan-ukuran/besar-kecil/semut kecil.png"
+        image: "/pengenalan-ukuran/besar-kecil/gajah.png",
+        image2: "/pengenalan-ukuran/besar-kecil/semut.png"
       },
       { 
         title: "Panjang & Pendek", 
         subtitle: "Ular itu PANJANG, Ulat itu PENDEK!", 
         desc1: "Ular sangat PANJANG!",
         desc2: "Ulat sangat PENDEK!",
-        image: "/pengenalan-ukuran/panjang-pendek/ular panjang.png",
-        image2: "/pengenalan-ukuran/panjang-pendek/ulat pendek.jpeg"
+        image: "/pengenalan-ukuran/panjang-pendek/ular.png",
+        image2: "/pengenalan-ukuran/panjang-pendek/ulat.png"
       },
       { 
         title: "Tinggi & Rendah", 
-        subtitle: "Dino itu TINGGI, Kucing itu RENDAH!", 
-        desc1: "Dino sangat TINGGI!",
-        desc2: "Kucing sangat RENDAH!",
-        image: "/pengenalan-ukuran/tinggi-rendah/dino tinggi.jpeg",
-        image2: "/pengenalan-ukuran/tinggi-rendah/kucing rendah.jpeg"
+        subtitle: "Jerapah itu TINGGI, Ayam itu RENDAH!", 
+        desc1: "Jerapah sangat TINGGI!",
+        desc2: "Ayam sangat RENDAH!",
+        image: "/pengenalan-ukuran/tinggi-rendah/jerapah.png",
+        image2: "/pengenalan-ukuran/tinggi-rendah/ayam.png"
       },
       { 
         title: "Berat & Ringan", 
         subtitle: "Batu itu BERAT, Balon itu RINGAN!", 
         desc1: "Batu sangat BERAT!",
         desc2: "Balon sangat RINGAN!",
-        image: "/pengenalan-ukuran/berat-ringan/batu berat.jpeg",
-        image2: "/pengenalan-ukuran/berat-ringan/balon ringan.jpeg"
+        image: "/pengenalan-ukuran/berat-ringan/batu.png",
+        image2: "/pengenalan-ukuran/berat-ringan/balon.png"
       },
       { 
         title: "Tebal & Tipis", 
@@ -76,16 +76,16 @@ export const LEARNING_DATA: Record<ThemeId, { title: string, items: LearningItem
         subtitle: "Airnya ada di mana ya?", 
         desc1: "Gelas ini isinya PENUH air.",
         desc2: "Gelas yang ini KOSONG, tidak ada air.",
-        image: "/pengenalan-ukuran/kosong-penuh/gelas penuh.jpeg",
-        image2: "/pengenalan-ukuran/kosong-penuh/gelas kosong.jpeg"
+        image: "/pengenalan-ukuran/kosong-penuh/gelaspenuh.png",
+        image2: "/pengenalan-ukuran/kosong-penuh/gelas kosong.png"
       },
       { 
         title: "Cepat - Lambat", 
         subtitle: "Siapa ya yang paling kencang?", 
-        desc1: "Kancil ini lari sangat CEPAT!",
+        desc1: "Kelinci ini lari sangat CEPAT!",
         desc2: "Kura-kura ini jalan pelan-pelan LAMBAT.",
-        image: "/pengenalan-ukuran/cepat-lambat/kancil cepat.jpeg",
-        image2: "/pengenalan-ukuran/cepat-lambat/kura kura.jpeg"
+        image: "/pengenalan-ukuran/cepat-lambat/kelinci.png",
+        image2: "/pengenalan-ukuran/cepat-lambat/kura-kura.png"
       },
       { 
         title: "Luas - Sempit", 
@@ -103,34 +103,34 @@ export const LEARNING_DATA: Record<ThemeId, { title: string, items: LearningItem
       { 
         title: "Lingkaran", 
         subtitle: "Bulat dan melingkar!", 
-        desc1: "Lingkaran itu BULAT sekali.",
-        desc2: "Seperti BOLA yang membal.",
-        image: "/lingkaran/Gemini_Generated_Image_7x3ltg7x3ltg7x3l.png",
-        image2: "/lingkaran/Gemini_Generated_Image_9k153d9k153d9k15.png"
+        desc1: "Seperti HULA HOOP warna-warni ini.",
+        desc2: "Seperti JAM DINDING bulat ini.",
+        image: "/lingkaran/lingkaran1.png",
+        image2: "/lingkaran/lingkaran2.png"
       },
       { 
         title: "Segitiga", 
         subtitle: "Punya tiga pojok lancip!", 
-        desc1: "Segitiga punya TIGA sisi.",
-        desc2: "Seperti TOPI pesta ini.",
-        image: "/segitiga/Gemini_Generated_Image_2o67qu2o67qu2o67.png",
-        image2: "/segitiga/Gemini_Generated_Image_dzs0e3dzs0e3dzs0.png"
+        desc1: "Seperti KERIPIK NACHO yang renyah ini.",
+        desc2: "Seperti BLOK SEGITIGA biru ini.",
+        image: "/segitiga/segitiga1.png",
+        image2: "/segitiga/segitiga2.png"
       },
       { 
         title: "Persegi", 
         subtitle: "Semua sisinya sama!", 
-        desc1: "Persegi punya EMPAT sisi.",
-        desc2: "Seperti KOTAK kado ini.",
-        image: "/persegi/hilangkan_square_perbesar_persegi_202605111955.jpeg",
-        image2: "/persegi/Square_shape_with_children_learning_202605111950 (1).jpeg"
+        desc1: "Seperti BLOK KOTAK biru ini.",
+        desc2: "Seperti BISKUIT kotak yang lezat ini.",
+        image: "/persegi/pesergi1.png",
+        image2: "/persegi/pesergi2.png"
       },
       { 
         title: "Persegi Panjang", 
         subtitle: "Ada yang panjang, ada yang pendek!", 
-        desc1: "Persegi Panjang itu LEBAR.",
-        desc2: "Seperti PINTU rumah kita.",
-        image: "/pesergi panjang/pesergi panjang1.png",
-        image2: "/pesergi panjang/pesergi panjang2.png"
+        desc1: "Seperti BISKUIT PANJANG yang renyah ini.",
+        desc2: "Seperti BLOK PERSEGI PANJANG biru ini.",
+        image: "/pesergi panjang/pesergipanjang1.png",
+        image2: "/pesergi panjang/pesergipanjang2.png"
       },
     ]
   },
@@ -157,24 +157,24 @@ export const LEARNING_DATA: Record<ThemeId, { title: string, items: LearningItem
         subtitle: "Matahari sangat terang!", 
         desc1: "SIANG hari yang panas.",
         desc2: "Asyik bermain bersama!",
-        image: "/waktu/siang/siang (1).jpeg",
-        image2: "/waktu/siang/siang (3).jpeg"
+        image: "/waktu/siang/siang.png",
+        image2: "/waktu/siang/siang2.png"
       },
       { 
-        title: "Sore Hari", 
-        subtitle: "Matahari sudah mau bobo!", 
-        desc1: "SORE hari yang jingga.",
-        desc2: "Waktunya mandi sore!",
-        image: "/waktu/sore/sore (1).jpeg",
-        image2: "/waktu/sore/sore (2).jpeg"
+        title: "Pagi Hari", 
+        subtitle: "Matahari baru terbit, udaranya segar!", 
+        desc1: "PAGI hari yang cerah.",
+        desc2: "Waktunya berangkat sekolah!",
+        image: "/waktu/pagi/pagi1.png",
+        image2: "/waktu/pagi/pagi2.png"
       },
       { 
         title: "Malam Hari", 
         subtitle: "Ada bulan dan bintang!", 
         desc1: "MALAM hari yang tenang.",
         desc2: "Waktunya tidur nyenyak...",
-        image: "/waktu/malam/malam (1).jpeg",
-        image2: "/waktu/malam/malam (2).jpeg"
+        image: "/waktu/malam/malam1.png",
+        image2: "/waktu/malam/malam2.png"
       },
     ]
   }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito, Fredoka } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar";
+import SoundManager from "../components/SoundManager";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-sky-50 font-fredoka" suppressHydrationWarning>
+        <SoundManager />
         <Navbar />
         {children}
       </body>
