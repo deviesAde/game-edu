@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Ruler, Shapes, Binary, Clock, Sparkles } from "lucide-react";
 
 const themes = [
-  { id: 'size', title: 'Tema 1: Ukuran', desc: 'Besar & Kecil', icon: Ruler, color: 'bg-emerald-400', borderColor: 'border-emerald-600' },
-  { id: 'shape', title: 'Tema 2: Bentuk', desc: 'Geometri Lucu', icon: Shapes, color: 'bg-orange-400', borderColor: 'border-orange-600' },
+  { id: 'size', title: 'Tema 1: Pengukuran', desc: 'Besar & Kecil', icon: Ruler, color: 'bg-emerald-400', borderColor: 'border-emerald-600' },
+  { id: 'shape', title: 'Tema 2: Bentuk Geometri', desc: 'Geometri Lucu', icon: Shapes, color: 'bg-orange-400', borderColor: 'border-orange-600' },
   { id: 'number', title: 'Tema 3: Angka', desc: 'Ayo Berhitung!', icon: Binary, color: 'bg-purple-400', borderColor: 'border-purple-600' },
   { id: 'time', title: 'Tema 4: Waktu', desc: 'Siang & Malam', icon: Clock, color: 'bg-pink-400', borderColor: 'border-pink-600' },
 ];
@@ -39,7 +39,7 @@ export default function ThemesPage() {
                   </div>
                   <div>
                     <h2 className="text-4xl font-black tracking-tight drop-shadow-md">{theme.title}</h2>
-                    <p className="text-2xl font-bold opacity-90 italic">"{theme.desc}"</p>
+                    <p className="text-2xl font-bold opacity-90 italic">&quot;{theme.desc}&quot;</p>
                   </div>
                 </div>
 

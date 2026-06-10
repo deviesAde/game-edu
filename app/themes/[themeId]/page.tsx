@@ -5,7 +5,7 @@ export default async function LevelSelectionPage({ params }: { params: Promise<{
   const { themeId } = await params;
   
   const themeTitles: Record<string, string> = {
-    size: 'Ukuran',
+    size: 'Pengukuran',
     shape: 'Bentuk Geometri',
     number: 'Angka',
     time: 'Waktu'

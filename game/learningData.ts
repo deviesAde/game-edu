@@ -13,7 +13,7 @@ export interface LearningItem {
 
 export const LEARNING_DATA: Record<ThemeId, { title: string, items: LearningItem[] }> = {
   size: {
-    title: "UKURAN - Level 1 (Pengenalan Ukuran)",
+    title: "PENGUKURAN - Level 1 (Pengenalan Ukuran)",
     items: [
       { 
         title: "Besar & Kecil", 
